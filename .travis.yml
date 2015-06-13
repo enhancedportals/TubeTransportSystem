@@ -1,0 +1,14 @@
+language: java
+jdk:
+- oraclejdk7
+before_install:
+- chmod +x gradlew
+deploy:
+  provider: releases
+  api_key:
+    secure: rq5khoPYQ4mCx6DiKTgSbQt2u3zWb6hNlMHZeCLJVsINe78ynlF9zB6RcV5ENXr0B28w+fzKc08K+XMkU934KlCbtpXUBASlSUkgSj0DnB0N2TUuAaxzEtS6HfHYUmaBg9USnh0Ewzc0qitlfNcKKcK42mjXfYFv0vJbPvBP4FyKZJEvrkQomRaI3xSCKDKhI+3Vy+/bg4LWYv8Bl5CeLdkpwjp9yMFAtGPTjaFc6gh1s77D/2m4BUuzZN9gJsJdHMCc+mHzOIsrhnSmU7fMYnmyf0KI0yKQWS7YFRck3iyy/Hncc4J7cr4k/JhUGkXAVI35zlW8BuuJMjl69OqKIh9PlLxpjiw0+dTLUwOM2nbdYbhvKeOgKz1dtPB7J6NRtUGRJoHZSsP2ilihROtFBX8jhO3lhSxkGFea/d/B6TnWdCuSB+pYKrztgYLVjrRuzgMXvLVsjY5N+YRUYF5hfGRRl2qwEvhO9xYENxJgQTtwl48pzSxd+KxGXW2IJ2pXNs87paidKMnI08fe4/I6iZLf5sPdIPX3WZLGb152Aru1HHQ5BFY+Ra/M0q4OAy+Dp12j6bi2OpNq37fl9IL2dH4qOL6BA28ODtnHEil+EWuV65S69TkH+komAnpGkxROuz6hGgyNuaq2OIU+ZdSa74ZB+Zg/FXdFCx/TPeUwNXA=
+  file_glob: true
+  file: ${HOME}/build/${TRAVIS_REPO_SLUG}/build/libs/TubeTransportSystem_*.jar
+  skip_cleanup: true
+  on:
+    tags: true
