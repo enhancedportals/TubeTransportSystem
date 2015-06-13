@@ -2,6 +2,7 @@ package tubeTransportSystem.network;
 
 import java.io.File;
 
+import net.minecraft.block.BlockStoneSlab;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ public class ProxyCommon {
 	
 	public void registerCrafting() {
 		GameRegistry.addShapedRecipe(new ItemStack(BlockTube.instance, 16), "SGS", "GEG", "SGS", 'S', Blocks.stone, 'G', Blocks.glass, 'E', Items.ender_pearl);
-		GameRegistry.addShapedRecipe(new ItemStack(BlockStation.instance, 1), "SLS", "S S", "SLS", 'S', Blocks.stone, 'L', Blocks.stone_slab);
+		GameRegistry.addShapedRecipe(new ItemStack(BlockStation.instance, 1), "SLS", "S S", "SLS", 'S', Blocks.stone, 'L', new ItemStack(Blocks.stone_slab, 1, 0));
 	
 		for (int i = 0; i < 6; i++) {
 			GameRegistry.addShapelessRecipe(new ItemStack(BlockTube.instance, 1, 10 + i), new ItemStack(BlockTube.instance, 1, i > 0 ? 10 + i - 1 : i));
