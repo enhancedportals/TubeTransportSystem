@@ -1,0 +1,10 @@
+tile.tube.name=Transport Tube
+tile.station.name=Tube Station
+itemGroup.tts=Tube Transport System
+item.tube.forced=Direction: %s
+item.tube.direction.0=DOWN
+item.tube.direction.1=UP
+item.tube.direction.2=NORTH
+item.tube.direction.3=SOUTH
+item.tube.direction.4=EAST
+item.tube.direction.5=WEST

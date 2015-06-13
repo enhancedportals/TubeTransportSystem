@@ -1,0 +1,14 @@
+[{
+  "modid": "${mod_id}",
+  "name": "Tube Transport System",
+  "version": "${mod_version}",
+  "mcversion": "${mc_version}",
+  "url": "",
+  "credits": "",
+  "authorList": [ "Alz454" ],
+  "description": "Why should items get all the fun?",
+  "logoFile": "",
+  "updateUrl": "",
+  "parent": "",
+  "screenshots": [ ]
+}]
