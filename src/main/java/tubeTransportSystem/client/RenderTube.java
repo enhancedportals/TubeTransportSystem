@@ -39,12 +39,16 @@ public class RenderTube implements ISimpleBlockRenderingHandler {
 				Block blockCheck = world.getBlock(x, y, z - 1), blockCheck2 = world.getBlock(x, y, z + 1);
 				renderer.setRenderBounds(0.01, 0.01, blockCheck != BlockTube.instance && blockCheck != BlockStation.instance ? 0.01 : 0, 0.99, 0.99, blockCheck2 != BlockTube.instance && blockCheck2 != BlockStation.instance ? 0.99 : 1);
 			} else if (meta == 4 || meta == 5) {
+				renderer.uvRotateBottom = 3;
+				renderer.uvRotateTop = 3;
 				Block blockCheck = world.getBlock(x - 1, y, z), blockCheck2 = world.getBlock(x + 1, y, z);
 				renderer.setRenderBounds(blockCheck != BlockTube.instance && blockCheck != BlockStation.instance ? 0.01 : 0, 0.01, 0.01, blockCheck2 != BlockTube.instance && blockCheck2 != BlockStation.instance ? 0.99 : 1, 0.99, 0.99);
 			}
 			
 			renderer.renderStandardBlock(BlockTube.instance, x, y, z);
 			
+			renderer.uvRotateBottom = 0;
+			renderer.uvRotateTop = 0;
 			renderer.flipTexture = false;
 			renderer.setRenderFromInside(false);
 		} else

@@ -14,7 +14,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 public class TubeTransportSystem {
 	public static final String MOD_NAME = "Tube Transport System";
     public static final String MOD_ID = "tts";
-    public static final String MOD_VERSION = "0.1";
+    public static final String MOD_VERSION = "0.5";
     public static final CreativeTabs creativeTab = new CreativeTab();
     
     @Instance(MOD_ID)
