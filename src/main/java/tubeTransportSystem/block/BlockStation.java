@@ -1,8 +1,12 @@
 package tubeTransportSystem.block;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -12,16 +16,23 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import tubeTransportSystem.TubeTransportSystem;
 import tubeTransportSystem.client.RenderStation;
 import tubeTransportSystem.item.ItemStation;
 import tubeTransportSystem.network.ProxyClient;
-import tubeTransportSystem.network.ProxyCommon;
+import tubeTransportSystem.repack.codechicken.lib.raytracer.IndexedCuboid6;
+import tubeTransportSystem.repack.codechicken.lib.raytracer.RayTracer;
+import tubeTransportSystem.repack.codechicken.lib.vec.BlockCoord;
+import tubeTransportSystem.repack.codechicken.lib.vec.Cuboid6;
+import tubeTransportSystem.repack.codechicken.lib.vec.Vector3;
 import tubeTransportSystem.util.Utilities;
 
 public class BlockStation extends Block {
@@ -30,7 +41,7 @@ public class BlockStation extends Block {
     public static IIcon entr1, entr2, entr3, entr4;
     public static IIcon side_misc;
 
-    static final int SHIFT = 8;
+    public static final int SHIFT = 8;
 
     public BlockStation(String n) {
         super(Material.rock);
@@ -87,12 +98,22 @@ public class BlockStation extends Block {
     public IIcon getIcon(int s, int m) {
         return s == 2 ? ItemStation.entrance : ItemStation.side;
     }
-
+    
     @Override
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);  // TODO
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        if (metadata < SHIFT)
+            return super.getDrops(world, x, y, z, metadata, fortune);
+        return
+            new ArrayList<ItemStack>();
     }
 
+    @Override
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
+        List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
+        Utilities.addCuboidsForRaytraceStation(cuboids, world, x, y, z);
+        return Utilities.rayTracer.rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
+    }
+    
     @Override
     public boolean isNormalCube() {
         return false;
@@ -142,7 +163,14 @@ public class BlockStation extends Block {
     }
 
     @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+        
+        return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
+    }
+    
+    @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axisAlignedBB, List list, Entity entity) {
+        setBlockBounds(0, 0, 0, 1, 1, 1);
         if (entity == null) return;
         int meta = world.getBlockMetadata(x, y, z);
         List<AxisAlignedBB> axis = new ArrayList<AxisAlignedBB>();

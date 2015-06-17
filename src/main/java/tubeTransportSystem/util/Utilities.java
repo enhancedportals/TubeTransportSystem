@@ -1,14 +1,26 @@
 package tubeTransportSystem.util;
 
+import java.util.List;
+
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import tubeTransportSystem.block.BlockStation;
+import tubeTransportSystem.block.BlockStationHorizontal;
+import tubeTransportSystem.block.BlockTube;
 import tubeTransportSystem.network.ProxyCommon;
+import tubeTransportSystem.repack.codechicken.lib.raytracer.IndexedCuboid6;
+import tubeTransportSystem.repack.codechicken.lib.raytracer.RayTracer;
+import tubeTransportSystem.repack.codechicken.lib.vec.Cuboid6;
 
 public class Utilities {
+    public static RayTracer rayTracer = new RayTracer();
+    
     public static void entityAccelerate(Entity entity, ForgeDirection direction) {
         if (direction == ForgeDirection.DOWN)
             entity.addVelocity(0, -0.1, 0);
@@ -72,7 +84,7 @@ public class Utilities {
         return AxisAlignedBB.getBoundingBox(x, y + AXIS_FLOOR_MIN, z, x + 1, y + AXIS_FLOOR_MAX, z + 1);
     }
     
-    public static ChunkCoordinates getBlock(int x, int y, int z, int s) {
+    public static ChunkCoordinates getCoordinatesFromSide(int x, int y, int z, int s) {
         if (s == 0)
             y++;
         else if (s == 1)
@@ -87,5 +99,115 @@ public class Utilities {
             x--;
         
         return new ChunkCoordinates(x, y, z);
+    }
+    
+    public static void addCuboidsForRaytraceStation(List<IndexedCuboid6> list, World world, int x, int y, int z) {
+        int meta = world.getBlockMetadata(x, y, z);
+        ForgeDirection d = ForgeDirection.getOrientation(meta >= BlockStation.SHIFT ? meta - BlockStation.SHIFT : meta);
+        
+        if (d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH) {
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+            
+            if (d == ForgeDirection.NORTH)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+            else
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+        } else {
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+            
+            if (d == ForgeDirection.WEST)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+            else
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+        }
+        
+        if (meta >= BlockStation.SHIFT) {
+            if (world.getBlock(x, y + 1, z) != BlockTube.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y + 0.95, z, x + 1, y + 1, z + 1)));
+        } else {
+            if (world.getBlock(x, y - 1, z) != BlockTube.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
+        }
+    }
+    
+    public static void addCuboidsForRaytraceStationHorizontal(List<IndexedCuboid6> list, World world, int x, int y, int z) {
+        int meta = world.getBlockMetadata(x, y, z);
+        ForgeDirection d = ForgeDirection.getOrientation(meta >= BlockStationHorizontal.SHIFT ? meta - BlockStationHorizontal.SHIFT : meta);
+        
+        if (d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH) {
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+            
+            if (d == ForgeDirection.NORTH)
+                if (meta >= BlockStationHorizontal.SHIFT)
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+                else
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+            else
+                if (meta >= BlockStationHorizontal.SHIFT)
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+                else
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+        } else {
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+            
+            if (d == ForgeDirection.WEST)
+                if (meta >= BlockStationHorizontal.SHIFT)
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+                else
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+            else
+                if (meta >= BlockStationHorizontal.SHIFT)
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+                else
+                    list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+        }
+        
+        list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
+    }
+    
+    public static void addCuboidsForRaytraceTube(List<IndexedCuboid6> list, World world, int x, int y, int z) {
+        ForgeDirection d = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+        
+        if (d == ForgeDirection.UP || d == ForgeDirection.DOWN) {
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+            
+            Block bUp = world.getBlock(x, y + 1, z), bDown = world.getBlock(x, y - 1, z);
+            
+            if (bUp != BlockTube.instance && bUp != BlockStation.instance && bUp != BlockStationHorizontal.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y + 0.95, z, x + 1, y + 1, z + 1)));
+            if (bDown != BlockTube.instance && bDown != BlockStation.instance && bDown != BlockStationHorizontal.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
+        } else if (d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH) {
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y + 0.95, z, x + 1, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
+            
+            Block bUp = world.getBlock(x + 1, y, z), bDown = world.getBlock(x - 1, y, z);
+            
+            if (bUp != BlockTube.instance && bUp != BlockStation.instance && bUp != BlockStationHorizontal.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+            if (bDown != BlockTube.instance && bDown != BlockStation.instance && bDown != BlockStationHorizontal.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+        } else if (d == ForgeDirection.EAST || d == ForgeDirection.WEST) {
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y + 0.95, z, x + 1, y + 1, z + 1)));
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
+            
+            Block bUp = world.getBlock(x, y, z + 1), bDown = world.getBlock(x, y, z - 1);
+            
+            if (bUp != BlockTube.instance && bUp != BlockStation.instance && bUp != BlockStationHorizontal.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+            if (bDown != BlockTube.instance && bDown != BlockStation.instance && bDown != BlockStationHorizontal.instance)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+        }
     }
 }

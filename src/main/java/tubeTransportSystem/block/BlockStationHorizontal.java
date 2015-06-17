@@ -1,7 +1,9 @@
 package tubeTransportSystem.block;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -10,10 +12,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,6 +27,9 @@ import tubeTransportSystem.TubeTransportSystem;
 import tubeTransportSystem.client.RenderStation;
 import tubeTransportSystem.item.ItemStation;
 import tubeTransportSystem.network.ProxyClient;
+import tubeTransportSystem.repack.codechicken.lib.raytracer.IndexedCuboid6;
+import tubeTransportSystem.repack.codechicken.lib.vec.BlockCoord;
+import tubeTransportSystem.repack.codechicken.lib.vec.Vector3;
 import tubeTransportSystem.util.Utilities;
 
 public class BlockStationHorizontal extends Block {
@@ -47,6 +55,14 @@ public class BlockStationHorizontal extends Block {
 
     }
 
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        if (metadata < SHIFT)
+            return super.getDrops(world, x, y, z, metadata, fortune);
+        return
+            new ArrayList<ItemStack>();
+    }
+    
     @Override
     public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int s) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
@@ -102,8 +118,10 @@ public class BlockStationHorizontal extends Block {
     }
 
     @Override
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z); // TODO
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
+        List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
+        Utilities.addCuboidsForRaytraceStationHorizontal(cuboids, world, x, y, z);
+        return Utilities.rayTracer.rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
     }
 
     @Override
@@ -155,7 +173,7 @@ public class BlockStationHorizontal extends Block {
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int s) {
         if (s == 0) return true;
         
-        ChunkCoordinates self = Utilities.getBlock(x, y, z, s);
+        ChunkCoordinates self = Utilities.getCoordinatesFromSide(x, y, z, s);
         int meta = blockAccess.getBlockMetadata(self.posX, self.posY, self.posZ);
         
         if (meta == ForgeDirection.SOUTH.ordinal()) {

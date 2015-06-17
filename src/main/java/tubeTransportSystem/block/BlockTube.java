@@ -1,6 +1,7 @@
 package tubeTransportSystem.block;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -9,12 +10,17 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import tubeTransportSystem.TubeTransportSystem;
 import tubeTransportSystem.client.RenderTube;
 import tubeTransportSystem.network.ProxyClient;
+import tubeTransportSystem.repack.codechicken.lib.raytracer.IndexedCuboid6;
+import tubeTransportSystem.repack.codechicken.lib.vec.BlockCoord;
+import tubeTransportSystem.repack.codechicken.lib.vec.Vector3;
 import tubeTransportSystem.util.Utilities;
 
 public class BlockTube extends Block {
@@ -184,5 +190,12 @@ public class BlockTube extends Block {
     @Override
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, net.minecraftforge.common.util.ForgeDirection side) {
         return false;
+    }
+    
+    @Override
+    public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
+        List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
+        Utilities.addCuboidsForRaytraceTube(cuboids, world, x, y, z);
+        return Utilities.rayTracer.rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
     }
 }

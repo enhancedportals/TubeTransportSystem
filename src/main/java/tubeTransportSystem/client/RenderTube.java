@@ -1,12 +1,22 @@
 package tubeTransportSystem.client;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import tubeTransportSystem.block.BlockStation;
 import tubeTransportSystem.block.BlockTube;
 import tubeTransportSystem.network.ProxyClient;
+import tubeTransportSystem.repack.codechicken.lib.raytracer.IndexedCuboid6;
+import tubeTransportSystem.repack.codechicken.lib.vec.BlockCoord;
+import tubeTransportSystem.repack.codechicken.lib.vec.Vector3;
+import tubeTransportSystem.util.Utilities;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class RenderTube implements ISimpleBlockRenderingHandler {
@@ -46,8 +56,10 @@ public class RenderTube implements ISimpleBlockRenderingHandler {
             renderer.uvRotateTop = 0;
             renderer.flipTexture = false;
             renderer.setRenderFromInside(false);
-        } else
-            renderer.renderStandardBlock(BlockTube.instance, x, y, z);
+        } else {
+            renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
+            renderer.renderStandardBlock(block, x, y, z);
+        }
 
         return true;
     }

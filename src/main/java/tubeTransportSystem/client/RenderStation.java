@@ -148,8 +148,11 @@ public class RenderStation implements ISimpleBlockRenderingHandler {
             }
             
             renderer.setRenderFromInside(false);
-        } else
+        //} else {
+            renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
             renderer.renderStandardBlock(block, x, y, z);
+        //}
+        } else return false;
 
         return true;
     }
