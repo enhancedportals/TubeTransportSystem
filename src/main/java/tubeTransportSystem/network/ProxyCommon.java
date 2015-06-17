@@ -8,8 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 import tubeTransportSystem.block.BlockStation;
+import tubeTransportSystem.block.BlockStationHorizontal;
 import tubeTransportSystem.block.BlockTube;
 import tubeTransportSystem.item.ItemStation;
+import tubeTransportSystem.item.ItemStationHorizontal;
 import tubeTransportSystem.item.ItemTube;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -27,6 +29,7 @@ public class ProxyCommon {
     public void registerBlocks() {
         GameRegistry.registerBlock(new BlockTube("tube"), ItemTube.class, "tube");
         GameRegistry.registerBlock(new BlockStation("station"), ItemStation.class, "station");
+        GameRegistry.registerBlock(new BlockStationHorizontal("station"), ItemStationHorizontal.class, "stationH");
     }
 
     public void registerCrafting() {

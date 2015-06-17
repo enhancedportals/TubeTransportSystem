@@ -26,8 +26,8 @@ import tubeTransportSystem.util.Utilities;
 
 public class BlockStation extends Block {
     public static BlockStation instance;
-    public static IIcon side_top, side_bot;
-    public static IIcon entr_top, entr_bot;
+    public static IIcon side1, side2, side3, side4;
+    public static IIcon entr1, entr2, entr3, entr4;
     public static IIcon side_misc;
 
     static final int SHIFT = 8;
@@ -48,10 +48,14 @@ public class BlockStation extends Block {
 
     @Override
     public void registerBlockIcons(IIconRegister iconRegister) {
-        side_top = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_side_top");
-        side_bot = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_side_bot");
-        entr_top = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_entr_top");
-        entr_bot = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_entr_bot");
+        side1 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_side1");
+        side2 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_side2");
+        side3 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_side3");
+        side4 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_side4");
+        entr1 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_entr1");
+        entr2 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_entr2");
+        entr3 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_entr3");
+        entr4 = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_entr4");
         side_misc = iconRegister.registerIcon(TubeTransportSystem.MOD_ID + ":station_misc");
     }
 
@@ -60,23 +64,23 @@ public class BlockStation extends Block {
         int meta = blockAccess.getBlockMetadata(x, y, z);
 
         if (meta == ForgeDirection.NORTH.ordinal() && s == 2)
-            return entr_bot;
+            return entr1;
         else if (meta == ForgeDirection.NORTH.ordinal() + SHIFT && s == 2)
-            return entr_top;
+            return entr2;
         else if (meta == ForgeDirection.EAST.ordinal() && s == 5)
-            return entr_bot;
+            return entr1;
         else if (meta == ForgeDirection.EAST.ordinal() + SHIFT && s == 5)
-            return entr_top;
+            return entr2;
         else if (meta == ForgeDirection.SOUTH.ordinal() && s == 3)
-            return entr_bot;
+            return entr1;
         else if (meta == ForgeDirection.SOUTH.ordinal() + SHIFT && s == 3)
-            return entr_top;
+            return entr2;
         else if (meta == ForgeDirection.WEST.ordinal() && s == 4)
-            return entr_bot;
+            return entr1;
         else if (meta == ForgeDirection.WEST.ordinal() + SHIFT && s == 4)
-            return entr_top;
+            return entr2;
 
-        return s == 0 || s == 1 ? side_misc : meta >= SHIFT ? side_top : side_bot;
+        return s == 0 || s == 1 ? side_misc : meta >= SHIFT ? side1 : side2;
     }
 
     @Override
@@ -86,7 +90,7 @@ public class BlockStation extends Block {
 
     @Override
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z) {
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+        return super.getSelectedBoundingBoxFromPool(world, x, y, z);  // TODO
     }
 
     @Override
@@ -161,7 +165,7 @@ public class BlockStation extends Block {
             axis.add(Utilities.getCollisionBoxPart(x, y, z, ForgeDirection.SOUTH));
         }
 
-        if (meta > SHIFT) { // top
+        if (meta >= SHIFT) { // top
             if (entity.isSneaking() && world.getBlockMetadata(x, y + 1, z) == ForgeDirection.UP.ordinal())
                 axis.add(Utilities.getCollisionBoxPart(x, y, z, ForgeDirection.UP));
             else if (world.getBlock(x, y + 1, z) != BlockTube.instance)

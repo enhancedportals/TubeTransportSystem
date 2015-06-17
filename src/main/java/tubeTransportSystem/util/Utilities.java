@@ -3,6 +3,7 @@ package tubeTransportSystem.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import tubeTransportSystem.network.ProxyCommon;
@@ -69,5 +70,22 @@ public class Utilities {
 
     public static AxisAlignedBB getCollisionBoxPartFloor(int x, int y, int z) {
         return AxisAlignedBB.getBoundingBox(x, y + AXIS_FLOOR_MIN, z, x + 1, y + AXIS_FLOOR_MAX, z + 1);
+    }
+    
+    public static ChunkCoordinates getBlock(int x, int y, int z, int s) {
+        if (s == 0)
+            y++;
+        else if (s == 1)
+            y--;
+        else if (s == 2)
+            z++;
+        else if (s == 3)
+            z--;
+        else if (s == 4)
+            x++;
+        else if (s == 5)
+            x--;
+        
+        return new ChunkCoordinates(x, y, z);
     }
 }
