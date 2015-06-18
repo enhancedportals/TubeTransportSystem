@@ -11,7 +11,6 @@ import tubeTransportSystem.block.BlockStation;
 import tubeTransportSystem.block.BlockStationHorizontal;
 import tubeTransportSystem.block.BlockTube;
 import tubeTransportSystem.item.ItemStation;
-import tubeTransportSystem.item.ItemStationHorizontal;
 import tubeTransportSystem.item.ItemTube;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -19,6 +18,7 @@ public class ProxyCommon {
     Configuration config;
     public static double CONFIG_MAX_SPEED = 0.5;
     public static double CONFIG_MAX_SPEED_INVERSE = -0.5;
+    public int lastSideHit = 0;
 
     public void setupConfig(File file) {
         config = new Configuration(file);
@@ -29,7 +29,7 @@ public class ProxyCommon {
     public void registerBlocks() {
         GameRegistry.registerBlock(new BlockTube("tube"), ItemTube.class, "tube");
         GameRegistry.registerBlock(new BlockStation("station"), ItemStation.class, "station");
-        GameRegistry.registerBlock(new BlockStationHorizontal("station"), ItemStationHorizontal.class, "stationH");
+        GameRegistry.registerBlock(new BlockStationHorizontal("station"), "stationH");
     }
 
     public void registerCrafting() {

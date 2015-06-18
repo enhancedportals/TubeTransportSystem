@@ -33,9 +33,10 @@ import tubeTransportSystem.repack.codechicken.lib.raytracer.RayTracer;
 import tubeTransportSystem.repack.codechicken.lib.vec.BlockCoord;
 import tubeTransportSystem.repack.codechicken.lib.vec.Cuboid6;
 import tubeTransportSystem.repack.codechicken.lib.vec.Vector3;
+import tubeTransportSystem.util.IConnectable;
 import tubeTransportSystem.util.Utilities;
 
-public class BlockStation extends Block {
+public class BlockStation extends Block implements IConnectable {
     public static BlockStation instance;
     public static IIcon side1, side2, side3, side4;
     public static IIcon entr1, entr2, entr3, entr4;
@@ -122,27 +123,6 @@ public class BlockStation extends Block {
     @Override
     public boolean isOpaqueCube() {
         return false;
-    }
-
-    @Override
-    public boolean canRenderInPass(int pass) {
-        ProxyClient.renderPass = pass;
-        return pass < 2;
-    }
-
-    @Override
-    public int getRenderBlockPass() {
-        return 1;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
-
-        ForgeDirection d = Utilities.entityGetDirection(entityLiving);
-        boolean isUpper = world.getBlock(x, y - 1, z) == this && world.getBlockMetadata(x, y - 1, z) < SHIFT;
-
-        world.setBlockMetadataWithNotify(x, y, z, isUpper ? d.ordinal() + SHIFT : d.ordinal(), 3);
     }
 
     @Override
@@ -247,5 +227,18 @@ public class BlockStation extends Block {
         }
 
         Utilities.entityLimitSpeed(entity);
+    }
+
+    @Override
+    public boolean canConnectTo(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
+        if (d != ForgeDirection.UP && d != ForgeDirection.DOWN) return false;
+        Block block = blockAccess.getBlock(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
+        int meta = blockAccess.getBlockMetadata(x + d.offsetX, y + d.offsetY, z + d.offsetZ), thisMeta = blockAccess.getBlockMetadata(x, y, z);
+        return block == this && thisMeta >= SHIFT ? meta == thisMeta - SHIFT : thisMeta + SHIFT == meta;
+    }
+    
+    @Override
+    public boolean canConnectToStrict(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
+        return canConnectTo(blockAccess, x, y, z, d);
     }
 }

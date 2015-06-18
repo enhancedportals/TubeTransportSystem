@@ -3,14 +3,20 @@ package tubeTransportSystem.item;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import tubeTransportSystem.TubeTransportSystem;
+import tubeTransportSystem.block.BlockTube;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemTube extends ItemBlockWithMetadata {
     public static ItemTube instance;
@@ -20,6 +26,21 @@ public class ItemTube extends ItemBlockWithMetadata {
         instance = this;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIconFromDamage(int meta) {
+        if (meta == 0) {
+            ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.mainInventory[Minecraft.getMinecraft().thePlayer.inventory.currentItem];
+            
+            if (stack != null && stack.getItem() == this && stack.getItemDamage() == 0)
+                return BlockTube.instance.getIcon(0, TubeTransportSystem.proxy.lastSideHit);
+            else
+                TubeTransportSystem.proxy.lastSideHit = 0;
+        }
+        
+        return super.getIconFromDamage(meta);
+    }
+    
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(new ItemStack(item, 1, 0));

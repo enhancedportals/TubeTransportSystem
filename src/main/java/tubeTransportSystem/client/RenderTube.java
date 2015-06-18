@@ -1,67 +1,72 @@
 package tubeTransportSystem.client;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import tubeTransportSystem.block.BlockStation;
+import net.minecraftforge.common.util.ForgeDirection;
 import tubeTransportSystem.block.BlockTube;
+import tubeTransportSystem.item.ItemTube;
 import tubeTransportSystem.network.ProxyClient;
-import tubeTransportSystem.repack.codechicken.lib.raytracer.IndexedCuboid6;
-import tubeTransportSystem.repack.codechicken.lib.vec.BlockCoord;
-import tubeTransportSystem.repack.codechicken.lib.vec.Vector3;
-import tubeTransportSystem.util.Utilities;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class RenderTube implements ISimpleBlockRenderingHandler {
     public static int ID;
-
+    public static boolean IS_INTERNAL = false;
+    
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
-        renderer.setOverrideBlockTexture(BlockTube.instance.getBlockTextureFromSide(0));
+        renderer.setOverrideBlockTexture(ItemTube.instance.getIconFromDamage(metadata));
         renderer.renderBlockAsItem(Blocks.stone, 0, 0xFFFFFF);
         renderer.clearOverrideBlockTexture();
     }
 
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
-        if (ProxyClient.renderPass == 0) {
-            renderer.setRenderFromInside(true);
-            renderer.flipTexture = true;
+        boolean rendered = false;
+        boolean[] renderBound = new boolean[6];
 
-            int meta = world.getBlockMetadata(x, y, z);
+        for (int i = 0; i < 6; i++) {
+            ForgeDirection d = ForgeDirection.UNKNOWN;
 
-            if (meta == 0 || meta == 1) {
-                Block blockCheck = world.getBlock(x, y - 1, z);
-                renderer.setRenderBounds(0.01, blockCheck != BlockTube.instance && blockCheck != BlockStation.instance ? 0.01 : 0, 0.01, 0.99, 1, 0.99);
-            } else if (meta == 2 || meta == 3) {
-                Block blockCheck = world.getBlock(x, y, z - 1), blockCheck2 = world.getBlock(x, y, z + 1);
-                renderer.setRenderBounds(0.01, 0.01, blockCheck != BlockTube.instance && blockCheck != BlockStation.instance ? 0.01 : 0, 0.99, 0.99, blockCheck2 != BlockTube.instance && blockCheck2 != BlockStation.instance ? 0.99 : 1);
-            } else if (meta == 4 || meta == 5) {
-                renderer.uvRotateBottom = 3;
-                renderer.uvRotateTop = 3;
-                Block blockCheck = world.getBlock(x - 1, y, z), blockCheck2 = world.getBlock(x + 1, y, z);
-                renderer.setRenderBounds(blockCheck != BlockTube.instance && blockCheck != BlockStation.instance ? 0.01 : 0, 0.01, 0.01, blockCheck2 != BlockTube.instance && blockCheck2 != BlockStation.instance ? 0.99 : 1, 0.99, 0.99);
-            }
+            if (i == 0)
+                d = ForgeDirection.WEST;
+            else if (i == 1)
+                d = ForgeDirection.DOWN;
+            else if (i == 2)
+                d = ForgeDirection.NORTH;
+            else if (i == 3)
+                d = ForgeDirection.EAST;
+            else if (i == 4)
+                d = ForgeDirection.UP;
+            else if (i == 5)
+                d = ForgeDirection.SOUTH;
 
-            renderer.renderStandardBlock(BlockTube.instance, x, y, z);
-
-            renderer.uvRotateBottom = 0;
-            renderer.uvRotateTop = 0;
-            renderer.flipTexture = false;
-            renderer.setRenderFromInside(false);
-        } else {
-            renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
-            renderer.renderStandardBlock(block, x, y, z);
+            renderBound[i] = BlockTube.instance.canConnectTo(world, x, y, z, d);
         }
 
-        return true;
+        renderer.setRenderFromInside(true);
+        renderer.setRenderBounds(renderBound[0] ? 0 : 0.01, renderBound[1] ? 0 : 0.01, renderBound[2] ? 0 : 0.01, renderBound[3] ? 1 : 0.99, renderBound[4] ? 1 : 0.99, renderBound[5] ? 1 : 0.99);
+
+        renderer.uvRotateBottom = 0;
+        renderer.uvRotateTop = 0;
+        renderer.flipTexture = true;
+        IS_INTERNAL = true;
+
+        rendered = renderer.renderStandardBlock(BlockTube.instance, x, y, z);
+
+        IS_INTERNAL = false;
+        renderer.flipTexture = false;
+        renderer.uvRotateBottom = 0;
+        renderer.uvRotateTop = 0;
+        renderer.setRenderFromInside(false);
+
+        //------------------------
+        
+        renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
+        rendered = renderer.renderStandardBlock(block, x, y, z) || rendered;
+
+        return rendered;
     }
 
     @Override

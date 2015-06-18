@@ -3,16 +3,12 @@ package tubeTransportSystem.block;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
@@ -30,9 +26,10 @@ import tubeTransportSystem.network.ProxyClient;
 import tubeTransportSystem.repack.codechicken.lib.raytracer.IndexedCuboid6;
 import tubeTransportSystem.repack.codechicken.lib.vec.BlockCoord;
 import tubeTransportSystem.repack.codechicken.lib.vec.Vector3;
+import tubeTransportSystem.util.IConnectable;
 import tubeTransportSystem.util.Utilities;
 
-public class BlockStationHorizontal extends Block {
+public class BlockStationHorizontal extends Block implements IConnectable {
     public static BlockStationHorizontal instance;
     public static final int SHIFT = 8;
 
@@ -42,7 +39,6 @@ public class BlockStationHorizontal extends Block {
         instance = this;
         setLightOpacity(1);
         setHardness(5f);
-        setCreativeTab(TubeTransportSystem.creativeTab);
     }
 
     @Override
@@ -132,26 +128,6 @@ public class BlockStationHorizontal extends Block {
     @Override
     public boolean isOpaqueCube() {
         return false;
-    }
-
-    @Override
-    public boolean canRenderInPass(int pass) {
-        ProxyClient.renderPass = pass;
-        return pass < 2;
-    }
-
-    @Override
-    public int getRenderBlockPass() {
-        return 1;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
-        ForgeDirection d = Utilities.entityGetDirection(entityLiving).getOpposite();
-        int x2 = x + d.offsetX, y2 = y + d.offsetY, z2 = z + d.offsetZ;
-        boolean isUpper = world.getBlock(x2, y2, z2) == this && world.getBlockMetadata(x2, y2, z2) < SHIFT;
-        world.setBlockMetadataWithNotify(x, y, z, isUpper ? d.ordinal() + SHIFT : d.ordinal(), 3);
     }
 
     ChunkCoordinates getPartner(World world, int x, int y, int z) {
@@ -274,5 +250,18 @@ public class BlockStationHorizontal extends Block {
     @Override
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
         return false;
+    }
+    
+    @Override
+    public boolean canConnectTo(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
+        if (d == ForgeDirection.UP || d == ForgeDirection.DOWN) return false;
+        Block block = blockAccess.getBlock(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
+        int meta = blockAccess.getBlockMetadata(x + d.offsetX, y + d.offsetY, z + d.offsetZ), thisMeta = blockAccess.getBlockMetadata(x, y, z);
+        return block == this && thisMeta >= SHIFT ? meta == thisMeta - SHIFT : thisMeta + SHIFT == meta;
+    }
+
+    @Override
+    public boolean canConnectToStrict(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
+        return canConnectTo(blockAccess, x, y, z, d);
     }
 }

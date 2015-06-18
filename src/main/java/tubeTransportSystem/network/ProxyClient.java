@@ -5,8 +5,6 @@ import tubeTransportSystem.client.RenderTube;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ProxyClient extends ProxyCommon {
-    public static int renderPass = 0;
-
     @Override
     public void miscSetup() {
         super.miscSetup();

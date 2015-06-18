@@ -2,12 +2,14 @@ package tubeTransportSystem;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.common.MinecraftForge;
 import tubeTransportSystem.block.BlockStation;
 import tubeTransportSystem.block.BlockStationHorizontal;
 import tubeTransportSystem.block.BlockTube;
+import tubeTransportSystem.item.ItemTube;
 import tubeTransportSystem.network.ProxyCommon;
 import tubeTransportSystem.repack.codechicken.lib.raytracer.RayTracer;
 import tubeTransportSystem.util.CreativeTab;
@@ -60,6 +62,12 @@ public class TubeTransportSystem {
             
             if (b == BlockStation.instance || b == BlockStationHorizontal.instance || b == BlockTube.instance)
                 RayTracer.retraceBlock(event.player.worldObj, event.player, event.target.blockX, event.target.blockY, event.target.blockZ);
+            
+            ItemStack stack = event.player.inventory.mainInventory[event.player.inventory.currentItem];
+            
+            if (stack != null && stack.getItem() == ItemTube.instance) {
+                proxy.lastSideHit = event.target.sideHit;
+            }
         }
     }
 }
