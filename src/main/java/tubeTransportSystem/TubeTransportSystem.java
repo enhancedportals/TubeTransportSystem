@@ -10,9 +10,11 @@ import tubeTransportSystem.block.BlockStation;
 import tubeTransportSystem.block.BlockStationHorizontal;
 import tubeTransportSystem.block.BlockTube;
 import tubeTransportSystem.item.ItemTube;
+import tubeTransportSystem.network.LogOnHandler;
 import tubeTransportSystem.network.ProxyCommon;
 import tubeTransportSystem.repack.codechicken.lib.raytracer.RayTracer;
 import tubeTransportSystem.util.CreativeTab;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -28,7 +30,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TubeTransportSystem {
     public static final String MOD_NAME = "Tube Transport System";
     public static final String MOD_ID = "tts";
-    public static final String MOD_VERSION = "0.5";
+    public static final String MOD_VERSION = "0.6";
+    public static final String UPDATE_URL = "https://raw.githubusercontent.com/Alz454/TubeTransportSystem/master/docs/VERSION";
     public static final CreativeTabs creativeTab = new CreativeTab();
 
     @Instance(MOD_ID)
@@ -52,6 +55,9 @@ public class TubeTransportSystem {
     public void postinit(FMLPostInitializationEvent event) {
         proxy.miscSetup();
         proxy.registerCrafting();
+        
+        if (event.getSide() == Side.CLIENT)
+            FMLCommonHandler.instance().bus().register(new LogOnHandler());
     }
     
     @SideOnly(Side.CLIENT)
