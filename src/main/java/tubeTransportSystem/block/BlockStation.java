@@ -102,10 +102,7 @@ public class BlockStation extends Block implements IConnectable {
     
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-        if (metadata < SHIFT)
-            return super.getDrops(world, x, y, z, metadata, fortune);
-        return
-            new ArrayList<ItemStack>();
+        return super.getDrops(world, x, y, z, 0, fortune);
     }
 
     @Override

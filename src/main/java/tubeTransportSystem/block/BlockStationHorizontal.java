@@ -53,10 +53,9 @@ public class BlockStationHorizontal extends Block implements IConnectable {
 
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-        if (metadata < SHIFT)
-            return super.getDrops(world, x, y, z, metadata, fortune);
-        return
-            new ArrayList<ItemStack>();
+        ArrayList<ItemStack> list = new ArrayList<ItemStack>();
+        list.add(new ItemStack(BlockStation.instance, 1));
+        return list;
     }
     
     @Override
