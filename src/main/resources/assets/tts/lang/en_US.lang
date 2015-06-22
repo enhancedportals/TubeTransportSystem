@@ -8,3 +8,4 @@ item.tube.direction.2=NORTH
 item.tube.direction.3=SOUTH
 item.tube.direction.4=EAST
 item.tube.direction.5=WEST
+tts.chat.updateMessage=There is an update available for Tube Transport System (%1$s)
