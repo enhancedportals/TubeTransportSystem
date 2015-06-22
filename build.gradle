@@ -59,3 +59,16 @@ processResources {
         exclude '**/*.properties'
     }
 }
+
+jar {
+    appendix = 'universal'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    appendix = 'deobf'
+}
+
+artifacts {
+    archives deobfJar
+}
