@@ -1,5 +1,5 @@
 ![Logo](http://i.imgur.com/bNKvpVQ.png)
-[![Build Status](https://travis-ci.org/Alz454/TubeTransportSystem.svg)](https://travis-ci.org/Alz454/TubeTransportSystem)
+[![Build Status](https://travis-ci.org/enhancedportals/TubeTransportSystem.svg)](https://travis-ci.org/enhancedportals/TubeTransportSystem)
 
 Useful Links:
 * [License](docs/LICENSE)
