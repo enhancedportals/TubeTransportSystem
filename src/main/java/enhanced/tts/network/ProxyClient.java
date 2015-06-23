@@ -5,9 +5,9 @@ import enhanced.tts.client.RenderStation;
 import enhanced.tts.client.RenderTube;
 
 public class ProxyClient extends ProxyCommon {
-	@Override
+    @Override
     public void postInit() {
-    	super.postInit();
+        super.postInit();
         RenderTube.ID = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(RenderTube.ID, new RenderTube());
         RenderStation.ID = RenderingRegistry.getNextAvailableRenderId();

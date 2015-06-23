@@ -12,7 +12,7 @@ import enhanced.tts.item.ItemTube;
 public class RenderTube implements ISimpleBlockRenderingHandler {
     public static int ID;
     public static boolean IS_INTERNAL = false;
-    
+
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
         renderer.setOverrideBlockTexture(ItemTube.instance.getIconFromDamage(metadata));
@@ -60,8 +60,8 @@ public class RenderTube implements ISimpleBlockRenderingHandler {
         renderer.uvRotateTop = 0;
         renderer.setRenderFromInside(false);
 
-        //------------------------
-        
+        // ------------------------
+
         renderer.setRenderBounds(0, 0, 0, 1, 1, 1);
         rendered = renderer.renderStandardBlock(block, x, y, z) || rendered;
 

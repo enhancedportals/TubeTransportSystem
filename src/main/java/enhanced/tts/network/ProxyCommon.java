@@ -49,18 +49,18 @@ public class ProxyCommon extends BaseProxy {
         GameRegistry.addShapelessRecipe(new ItemStack(BlockTube.instance, 9, 0), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15), new ItemStack(BlockTube.instance, 1, 15));
     }
 
-	@Override
-	public void registerItems() {
-		
-	}
+    @Override
+    public void registerItems() {
 
-	@Override
-	public void registerTileEntities() {
-		
-	}
+    }
 
-	@Override
-	public void registerPackets() {
-		
-	}
+    @Override
+    public void registerTileEntities() {
+
+    }
+
+    @Override
+    public void registerPackets() {
+
+    }
 }

@@ -90,7 +90,7 @@ public class BlockStation extends Block implements IConnectable {
     public IIcon getIcon(int s, int m) {
         return s == 2 ? ItemStation.entrance : ItemStation.side;
     }
-    
+
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
         return super.getDrops(world, x, y, z, 0, fortune);
@@ -102,7 +102,7 @@ public class BlockStation extends Block implements IConnectable {
         Utilities.addCuboidsForRaytraceStation(cuboids, world, x, y, z);
         return Utilities.rayTracer.rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
     }
-    
+
     @Override
     public boolean isNormalCube() {
         return false;
@@ -132,14 +132,15 @@ public class BlockStation extends Block implements IConnectable {
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
-        
+
         return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
     }
-    
+
     @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axisAlignedBB, List list, Entity entity) {
         setBlockBounds(0, 0, 0, 1, 1, 1);
-        if (entity == null) return;
+        if (entity == null)
+            return;
         int meta = world.getBlockMetadata(x, y, z);
         List<AxisAlignedBB> axis = new ArrayList<AxisAlignedBB>();
 
@@ -182,7 +183,7 @@ public class BlockStation extends Block implements IConnectable {
     @Override
     public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
         int meta = world.getBlockMetadata(x, y, z);
-        
+
         if (meta >= SHIFT && world.getBlock(x, y - 1, z) == this)
             world.setBlock(x, y - 1, z, Blocks.air);
         else if (meta < SHIFT && world.getBlock(x, y + 1, z) == this)
@@ -206,7 +207,8 @@ public class BlockStation extends Block implements IConnectable {
 
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-        if (entity == null) return;
+        if (entity == null)
+            return;
         int meta = world.getBlockMetadata(x, y, z);
 
         if (!entity.isSneaking() && meta >= SHIFT && world.getBlock(x, y + 1, z) == BlockTube.instance && world.getBlockMetadata(x, y + 1, z) == ForgeDirection.UP.ordinal()) {
@@ -219,12 +221,13 @@ public class BlockStation extends Block implements IConnectable {
 
     @Override
     public boolean canConnectTo(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
-        if (d != ForgeDirection.UP && d != ForgeDirection.DOWN) return false;
+        if (d != ForgeDirection.UP && d != ForgeDirection.DOWN)
+            return false;
         Block block = blockAccess.getBlock(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
         int meta = blockAccess.getBlockMetadata(x + d.offsetX, y + d.offsetY, z + d.offsetZ), thisMeta = blockAccess.getBlockMetadata(x, y, z);
         return block == this && thisMeta >= SHIFT ? meta == thisMeta - SHIFT : thisMeta + SHIFT == meta;
     }
-    
+
     @Override
     public boolean canConnectToStrict(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
         return canConnectTo(blockAccess, x, y, z, d);

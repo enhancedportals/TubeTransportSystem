@@ -59,7 +59,7 @@ public class BlockTube extends Block implements IConnectable {
     public void registerBlockIcons(IIconRegister iconRegister) {
         for (int i = 0; i < 7; i++)
             textures[i].registerIcons(iconRegister);
-        
+
         for (int i = 7; i < textures.length; i++)
             textures[i].registerIcons(textures[6]);
     }
@@ -67,20 +67,20 @@ public class BlockTube extends Block implements IConnectable {
     @Override
     public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int s) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
-        
+
         if (meta <= 5) {
             ForgeDirection d = ForgeDirection.getOrientation(meta);
-            
+
             if ((d == ForgeDirection.UP || d == ForgeDirection.DOWN) && (s == 0 || s == 1))
                 return RenderTube.IS_INTERNAL ? textures[meta + 6].getIconForSideForInternal(blockAccess, x, y, z, s) : textures[meta + 6].getIconForSide(blockAccess, x, y, z, s);
-            else if  ((d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH) && (s == 2 || s == 3))
-                return RenderTube.IS_INTERNAL ? textures[meta + 6].getIconForSideForInternal(blockAccess, x, y, z, s) : textures[meta + 6].getIconForSide(blockAccess, x, y, z, s);
-            else if  ((d == ForgeDirection.EAST || d == ForgeDirection.WEST) && (s == 4 || s == 5))
+                else if ((d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH) && (s == 2 || s == 3))
                     return RenderTube.IS_INTERNAL ? textures[meta + 6].getIconForSideForInternal(blockAccess, x, y, z, s) : textures[meta + 6].getIconForSide(blockAccess, x, y, z, s);
-                   
-            return RenderTube.IS_INTERNAL ? textures[meta].getIconForSideForInternal(blockAccess, x, y, z, s) : textures[meta].getIconForSide(blockAccess, x, y, z, s);
+                    else if ((d == ForgeDirection.EAST || d == ForgeDirection.WEST) && (s == 4 || s == 5))
+                        return RenderTube.IS_INTERNAL ? textures[meta + 6].getIconForSideForInternal(blockAccess, x, y, z, s) : textures[meta + 6].getIconForSide(blockAccess, x, y, z, s);
+
+                        return RenderTube.IS_INTERNAL ? textures[meta].getIconForSideForInternal(blockAccess, x, y, z, s) : textures[meta].getIconForSide(blockAccess, x, y, z, s);
         }
-            
+
         return textures[0].getBaseIcon();
     }
 
@@ -91,7 +91,7 @@ public class BlockTube extends Block implements IConnectable {
 
         if (m > 5)
             m = 0;
-        
+
         return textures[m].getBaseIcon();
     }
 
@@ -135,18 +135,20 @@ public class BlockTube extends Block implements IConnectable {
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axisAlignedBB, List list, Entity entity) {
         if (entity == null)
             return;
-        
+
         ForgeDirection dir = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
         List<AxisAlignedBB> axis = new ArrayList<AxisAlignedBB>();
 
-        for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS) {
+        for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS)
             if (!canConnectTo(world, x, y, z, d)) {
-                if ((dir == ForgeDirection.UP || dir == ForgeDirection.DOWN) && (d == ForgeDirection.UP || d == ForgeDirection.DOWN)) continue;
-                if ((dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH) && (d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH)) continue;
-                if ((dir == ForgeDirection.EAST || dir == ForgeDirection.WEST) && (d == ForgeDirection.EAST || d == ForgeDirection.WEST)) continue;
+                if ((dir == ForgeDirection.UP || dir == ForgeDirection.DOWN) && (d == ForgeDirection.UP || d == ForgeDirection.DOWN))
+                    continue;
+                if ((dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH) && (d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH))
+                    continue;
+                if ((dir == ForgeDirection.EAST || dir == ForgeDirection.WEST) && (d == ForgeDirection.EAST || d == ForgeDirection.WEST))
+                    continue;
                 axis.add(Utilities.getCollisionBoxPart(x, y, z, d));
             }
-        }
 
         for (AxisAlignedBB a : axis)
             if (a != null && axisAlignedBB.intersectsWith(a))
@@ -157,14 +159,14 @@ public class BlockTube extends Block implements IConnectable {
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, net.minecraftforge.common.util.ForgeDirection side) {
         return false;
     }
-    
+
     @Override
     public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
         List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
         Utilities.addCuboidsForRaytraceTube(cuboids, world, x, y, z);
         return Utilities.rayTracer.rayTraceCuboids(new Vector3(start), new Vector3(end), cuboids, new BlockCoord(x, y, z), this);
     }
-    
+
     @Override
     public boolean canConnectTo(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
         return blockAccess.getBlock(x + d.offsetX, y + d.offsetY, z + d.offsetZ) == this;

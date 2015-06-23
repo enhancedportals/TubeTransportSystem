@@ -25,25 +25,25 @@ public class ItemStation extends ItemBlockWithMetadata {
         if (side == 0 || side == 1) {
             if (!world.isAirBlock(x, y + 1, z))
                 return false;
-            
+
             metadata = Utilities.entityGetDirection(player).ordinal();
-            
+
             if (world.setBlock(x, y, z, field_150939_a, metadata, 3) && world.setBlock(x, y + 1, z, field_150939_a, metadata + BlockStation.SHIFT, 3)) {
                 if (world.getBlock(x, y, z) == field_150939_a) {
                     field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
                     field_150939_a.onPostBlockPlaced(world, x, y, z, metadata);
                 }
-    
+
                 if (world.getBlock(x, y + 1, z) == field_150939_a) {
                     field_150939_a.onBlockPlacedBy(world, x, y + 1, z, player, stack);
                     field_150939_a.onPostBlockPlaced(world, x, y + 1, z, metadata + BlockStation.SHIFT);
                 }
-    
+
                 return true;
             }
         } else {
             ForgeDirection d = Utilities.entityGetDirection(player);
-            int x2 = x + d.offsetX, y2 = y + d.offsetY, z2  = z + d.offsetZ;
+            int x2 = x + d.offsetX, y2 = y + d.offsetY, z2 = z + d.offsetZ;
             metadata = d.ordinal();
 
             if (!world.isAirBlock(x2, y2, z2))

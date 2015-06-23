@@ -25,12 +25,7 @@ import enhanced.tts.network.ProxyCommon;
 
 @Mod(modid = TubeTransportSystem.MOD_ID, version = TubeTransportSystem.MOD_VERSION, name = TubeTransportSystem.MOD_NAME, dependencies = TubeTransportSystem.MOD_DEPENDENCIES)
 public class TubeTransportSystem extends BaseMod {
-	public static final String MOD_NAME = "Tube Transport System",
-							   MOD_ID = "tts",
-							   MOD_ID_SHORT = "tts",
-						       MOD_VERSION = "0.6",
-						       MOD_DEPENDENCIES = "required-after:enhancedcore",
-						       MOD_URL = "https://raw.githubusercontent.com/enhancedportals/VERSION/master/VERSION%20-%20Tube%20Transport%20System";
+    public static final String MOD_NAME = "Tube Transport System", MOD_ID = "tts", MOD_ID_SHORT = "tts", MOD_VERSION = "0.6", MOD_DEPENDENCIES = "required-after:enhancedcore", MOD_URL = "https://raw.githubusercontent.com/enhancedportals/VERSION/master/VERSION%20-%20Tube%20Transport%20System";
 
     @Instance(MOD_ID)
     public static TubeTransportSystem instance;
@@ -39,46 +34,45 @@ public class TubeTransportSystem extends BaseMod {
     public static ProxyCommon proxy;
 
     public TubeTransportSystem() {
-		super(MOD_URL, MOD_ID, MOD_ID_SHORT, MOD_NAME, MOD_VERSION);
-	}
-    
+        super(MOD_URL, MOD_ID, MOD_ID_SHORT, MOD_NAME, MOD_VERSION);
+    }
+
     // Startup
-    
+
     @EventHandler
     @Override
     public void init(FMLInitializationEvent event) {
-    	super.init(event);
+        super.init(event);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @EventHandler
     @Override
     public void postInit(FMLPostInitializationEvent event) {
-    	super.postInit(event);
+        super.postInit(event);
         creativeTab.setItem(new ItemStack(ItemTube.instance, 1, 0));
     }
-    
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-    	super.preInit(event, proxy);
+        super.preInit(event, proxy);
     }
-    
+
     // World Events
-    
+
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onBlockHighlight(DrawBlockHighlightEvent event) {
         if (event.target.typeOfHit == MovingObjectType.BLOCK) {
             Block b = event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ);
-            
+
             if (b == BlockStation.instance || b == BlockStationHorizontal.instance || b == BlockTube.instance)
                 RayTracer.retraceBlock(event.player.worldObj, event.player, event.target.blockX, event.target.blockY, event.target.blockZ);
-            
+
             ItemStack stack = event.player.inventory.mainInventory[event.player.inventory.currentItem];
-            
-            if (stack != null && stack.getItem() == ItemTube.instance) {
+
+            if (stack != null && stack.getItem() == ItemTube.instance)
                 proxy.lastSideHit = event.target.sideHit;
-            }
         }
     }
 }

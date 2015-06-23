@@ -55,53 +55,84 @@ public class BlockStationHorizontal extends Block implements IConnectable {
         list.add(new ItemStack(BlockStation.instance, 1));
         return list;
     }
-    
+
     @Override
     public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int s) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
 
         if (meta == ForgeDirection.NORTH.ordinal()) {
-            if (s == 1) return BlockStation.entr2;
-            else if (s == 0) return BlockStation.side1;
-            else if (s == 4) return BlockStation.side4;
-            else if (s == 5) return BlockStation.side3;
+            if (s == 1)
+                return BlockStation.entr2;
+            else if (s == 0)
+                return BlockStation.side1;
+            else if (s == 4)
+                return BlockStation.side4;
+            else if (s == 5)
+                return BlockStation.side3;
         } else if (meta == ForgeDirection.NORTH.ordinal() + SHIFT) {
-            if (s == 1) return BlockStation.entr1;
-            else if (s == 0) return BlockStation.side2;
-            else if (s == 4) return BlockStation.side3;
-            else if (s == 5) return BlockStation.side4;
+            if (s == 1)
+                return BlockStation.entr1;
+            else if (s == 0)
+                return BlockStation.side2;
+            else if (s == 4)
+                return BlockStation.side3;
+            else if (s == 5)
+                return BlockStation.side4;
         } else if (meta == ForgeDirection.EAST.ordinal()) {
-            if (s == 1) return BlockStation.entr3;
-            else if (s == 0) return BlockStation.side3;
-            else if (s == 2) return BlockStation.side4;
-            else if (s == 3) return BlockStation.side3;
+            if (s == 1)
+                return BlockStation.entr3;
+            else if (s == 0)
+                return BlockStation.side3;
+            else if (s == 2)
+                return BlockStation.side4;
+            else if (s == 3)
+                return BlockStation.side3;
         } else if (meta == ForgeDirection.EAST.ordinal() + SHIFT) {
-            if (s == 1) return BlockStation.entr4;
-            else if (s == 0) return BlockStation.side4;
-            else if (s == 2) return BlockStation.side3;
-            else if (s == 3) return BlockStation.side4;
+            if (s == 1)
+                return BlockStation.entr4;
+            else if (s == 0)
+                return BlockStation.side4;
+            else if (s == 2)
+                return BlockStation.side3;
+            else if (s == 3)
+                return BlockStation.side4;
         } else if (meta == ForgeDirection.SOUTH.ordinal()) {
-            if (s == 1) return BlockStation.entr1;
-            else if (s == 0) return BlockStation.side2;
-            else if (s == 4) return BlockStation.side3;
-            else if (s == 5) return BlockStation.side4;
+            if (s == 1)
+                return BlockStation.entr1;
+            else if (s == 0)
+                return BlockStation.side2;
+            else if (s == 4)
+                return BlockStation.side3;
+            else if (s == 5)
+                return BlockStation.side4;
         } else if (meta == ForgeDirection.SOUTH.ordinal() + SHIFT) {
-            if (s == 1) return BlockStation.entr2;
-            else if (s == 0) return BlockStation.side1;
-            else if (s == 4) return BlockStation.side4;
-            else if (s == 5) return BlockStation.side3;
+            if (s == 1)
+                return BlockStation.entr2;
+            else if (s == 0)
+                return BlockStation.side1;
+            else if (s == 4)
+                return BlockStation.side4;
+            else if (s == 5)
+                return BlockStation.side3;
         } else if (meta == ForgeDirection.WEST.ordinal()) {
-            if (s == 1) return BlockStation.entr4;
-            else if (s == 0) return BlockStation.side4;
-            else if (s == 2) return BlockStation.side3;
-            else if (s == 3) return BlockStation.side4;
-        } else if (meta == ForgeDirection.WEST.ordinal() + SHIFT) {
-            if (s == 1) return BlockStation.entr3;
-            else if (s == 0) return BlockStation.side3;
-            else if (s == 2) return BlockStation.side4;
-            else if (s == 3) return BlockStation.side3;
-        }
-        
+            if (s == 1)
+                return BlockStation.entr4;
+            else if (s == 0)
+                return BlockStation.side4;
+            else if (s == 2)
+                return BlockStation.side3;
+            else if (s == 3)
+                return BlockStation.side4;
+        } else if (meta == ForgeDirection.WEST.ordinal() + SHIFT)
+            if (s == 1)
+                return BlockStation.entr3;
+            else if (s == 0)
+                return BlockStation.side3;
+            else if (s == 2)
+                return BlockStation.side4;
+            else if (s == 3)
+                return BlockStation.side3;
+
         return BlockStation.side_misc;
     }
 
@@ -130,10 +161,10 @@ public class BlockStationHorizontal extends Block implements IConnectable {
     ChunkCoordinates getPartner(World world, int x, int y, int z) {
         return getPartner(x, y, z, world.getBlockMetadata(x, y, z));
     }
-    
+
     ChunkCoordinates getPartner(int x, int y, int z, int m) {
         ForgeDirection d;
-        
+
         if (m < SHIFT)
             d = ForgeDirection.getOrientation(m).getOpposite();
         else
@@ -141,56 +172,57 @@ public class BlockStationHorizontal extends Block implements IConnectable {
 
         return new ChunkCoordinates(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
     }
-    
+
     @Override
     public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int s) {
-        if (s == 0) return true;
-        
+        if (s == 0)
+            return true;
+
         ChunkCoordinates self = Utilities.getCoordinatesFromSide(x, y, z, s);
         int meta = blockAccess.getBlockMetadata(self.posX, self.posY, self.posZ);
-        
+
         if (meta == ForgeDirection.SOUTH.ordinal()) {
             if (s == 3 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 2 ? false : true;
         } else if (meta == ForgeDirection.SOUTH.ordinal() + SHIFT) {
             if (s == 2 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 3 ? false : true;
         } else if (meta == ForgeDirection.NORTH.ordinal()) {
             if (s == 2 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 3 ? false : true;
         } else if (meta == ForgeDirection.NORTH.ordinal() + SHIFT) {
             if (s == 3 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 2 ? false : true;
         } else if (meta == ForgeDirection.EAST.ordinal()) {
             if (s == 5 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 4 ? false : true;
         } else if (meta == ForgeDirection.EAST.ordinal() + SHIFT) {
             if (s == 4 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 5 ? false : true;
         } else if (meta == ForgeDirection.WEST.ordinal()) {
             if (s == 4 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 5 ? false : true;
         } else if (meta == ForgeDirection.WEST.ordinal() + SHIFT) {
             if (s == 5 && blockAccess.getBlock(x, y, z) == BlockTube.instance)
                 return false;
-            
+
             return s == 4 ? false : true;
         }
-        
+
         return true;
     }
 
@@ -198,7 +230,7 @@ public class BlockStationHorizontal extends Block implements IConnectable {
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axisAlignedBB, List list, Entity entity) {
         if (entity == null)
             return;
-        
+
         List<AxisAlignedBB> axis = new ArrayList<AxisAlignedBB>();
         ForgeDirection d;
         int meta = world.getBlockMetadata(x, y, z);
@@ -210,17 +242,17 @@ public class BlockStationHorizontal extends Block implements IConnectable {
             axis.add(Utilities.getCollisionBoxPart(x, y, z, ForgeDirection.NORTH));
             axis.add(Utilities.getCollisionBoxPart(x, y, z, ForgeDirection.SOUTH));
         }
-        
+
         if (meta >= SHIFT)
             d = ForgeDirection.getOrientation(meta - SHIFT).getOpposite(); // Get the one above the top
         else
             d = ForgeDirection.getOrientation(meta); // Get the one below the bottom
-        
+
         if (entity.isSneaking() || world.getBlock(x + d.offsetX, y + d.offsetY, z + d.offsetZ) != BlockTube.instance)
             axis.add(Utilities.getCollisionBoxPart(x, y, z, d));
 
         axis.add(Utilities.getCollisionBoxPart(x, y, z, ForgeDirection.DOWN));
-        
+
         for (AxisAlignedBB a : axis)
             if (a != null && axisAlignedBB.intersectsWith(a))
                 list.add(a);
@@ -229,7 +261,7 @@ public class BlockStationHorizontal extends Block implements IConnectable {
     @Override
     public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
         ChunkCoordinates partner = getPartner(world, x, y, z);
-       
+
         if (world.getBlock(partner.posX, partner.posY, partner.posZ) == this)
             world.setBlock(partner.posX, partner.posY, partner.posZ, Blocks.air);
 
@@ -248,10 +280,11 @@ public class BlockStationHorizontal extends Block implements IConnectable {
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
         return false;
     }
-    
+
     @Override
     public boolean canConnectTo(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection d) {
-        if (d == ForgeDirection.UP || d == ForgeDirection.DOWN) return false;
+        if (d == ForgeDirection.UP || d == ForgeDirection.DOWN)
+            return false;
         Block block = blockAccess.getBlock(x + d.offsetX, y + d.offsetY, z + d.offsetZ);
         int meta = blockAccess.getBlockMetadata(x + d.offsetX, y + d.offsetY, z + d.offsetZ), thisMeta = blockAccess.getBlockMetadata(x, y, z);
         return block == this && thisMeta >= SHIFT ? meta == thisMeta - SHIFT : thisMeta + SHIFT == meta;

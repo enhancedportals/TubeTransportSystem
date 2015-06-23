@@ -31,16 +31,16 @@ public class ItemTube extends ItemBlockWithMetadata {
     public IIcon getIconFromDamage(int meta) {
         if (meta == 0) {
             ItemStack stack = Minecraft.getMinecraft().thePlayer.inventory.mainInventory[Minecraft.getMinecraft().thePlayer.inventory.currentItem];
-            
+
             if (stack != null && stack.getItem() == this && stack.getItemDamage() == 0)
                 return BlockTube.instance.getIcon(0, TubeTransportSystem.proxy.lastSideHit);
             else
                 TubeTransportSystem.proxy.lastSideHit = 0;
         }
-        
+
         return super.getIconFromDamage(meta);
     }
-    
+
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(new ItemStack(item, 1, 0));

@@ -19,7 +19,7 @@ import enhanced.tts.network.ProxyCommon;
 
 public class Utilities {
     public static RayTracer rayTracer = new RayTracer();
-    
+
     public static void entityAccelerate(Entity entity, ForgeDirection direction) {
         if (direction == ForgeDirection.DOWN)
             entity.addVelocity(0, -0.1, 0);
@@ -82,7 +82,7 @@ public class Utilities {
     public static AxisAlignedBB getCollisionBoxPartFloor(int x, int y, int z) {
         return AxisAlignedBB.getBoundingBox(x, y + AXIS_FLOOR_MIN, z, x + 1, y + AXIS_FLOOR_MAX, z + 1);
     }
-    
+
     public static ChunkCoordinates getCoordinatesFromSide(int x, int y, int z, int s) {
         if (s == 0)
             y++;
@@ -96,10 +96,10 @@ public class Utilities {
             x++;
         else if (s == 5)
             x--;
-        
+
         return new ChunkCoordinates(x, y, z);
     }
-    
+
     public static ForgeDirection getDirectionFromSide(int x, int y, int z, int s) {
         if (s == 0)
             return ForgeDirection.DOWN;
@@ -113,18 +113,18 @@ public class Utilities {
             return ForgeDirection.WEST;
         else if (s == 5)
             return ForgeDirection.EAST;
-        
+
         return ForgeDirection.UNKNOWN;
     }
-    
+
     public static void addCuboidsForRaytraceStation(List<IndexedCuboid6> list, World world, int x, int y, int z) {
         int meta = world.getBlockMetadata(x, y, z);
         ForgeDirection d = ForgeDirection.getOrientation(meta >= BlockStation.SHIFT ? meta - BlockStation.SHIFT : meta);
-        
+
         if (d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH) {
             list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
             list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
-            
+
             if (d == ForgeDirection.NORTH)
                 list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
             else
@@ -132,65 +132,60 @@ public class Utilities {
         } else {
             list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
             list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
-            
+
             if (d == ForgeDirection.WEST)
                 list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
             else
                 list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
         }
-        
+
         if (meta >= BlockStation.SHIFT) {
             if (world.getBlock(x, y + 1, z) != BlockTube.instance)
                 list.add(new IndexedCuboid6(0, new Cuboid6(x, y + 0.95, z, x + 1, y + 1, z + 1)));
-        } else {
-            if (world.getBlock(x, y - 1, z) != BlockTube.instance)
-                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
-        }
+        } else if (world.getBlock(x, y - 1, z) != BlockTube.instance)
+            list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
     }
-    
+
     public static void addCuboidsForRaytraceStationHorizontal(List<IndexedCuboid6> list, World world, int x, int y, int z) {
         int meta = world.getBlockMetadata(x, y, z);
         ForgeDirection d = ForgeDirection.getOrientation(meta >= BlockStationHorizontal.SHIFT ? meta - BlockStationHorizontal.SHIFT : meta);
-        
+
         if (d == ForgeDirection.NORTH || d == ForgeDirection.SOUTH) {
             list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
             list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
-            
+
             if (d == ForgeDirection.NORTH)
                 if (meta >= BlockStationHorizontal.SHIFT)
                     list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
                 else
                     list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
+            else if (meta >= BlockStationHorizontal.SHIFT)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
             else
-                if (meta >= BlockStationHorizontal.SHIFT)
-                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
-                else
-                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
         } else {
             list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 1, z + 0.05)));
             list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z + 0.95, x + 1, y + 1, z + 1)));
-            
+
             if (d == ForgeDirection.WEST)
                 if (meta >= BlockStationHorizontal.SHIFT)
                     list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
                 else
                     list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
+            else if (meta >= BlockStationHorizontal.SHIFT)
+                list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
             else
-                if (meta >= BlockStationHorizontal.SHIFT)
-                    list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 0.05, y + 1, z + 1)));
-                else
-                    list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
+                list.add(new IndexedCuboid6(0, new Cuboid6(x + 0.95, y, z, x + 1, y + 1, z + 1)));
         }
-        
+
         list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
     }
-    
+
     public static void addCuboidsForRaytraceTube(List<IndexedCuboid6> list, World world, int x, int y, int z) {
         boolean[] connectTo = new boolean[6];
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++)
             connectTo[i] = BlockTube.instance.canConnectTo(world, x, y, z, ForgeDirection.getOrientation(i));
-        }
-        
+
         if (!connectTo[0]) // DOWN
             list.add(new IndexedCuboid6(0, new Cuboid6(x, y, z, x + 1, y + 0.05, z + 1)));
         if (!connectTo[1]) // UP
