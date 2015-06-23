@@ -25,7 +25,7 @@ import enhanced.tts.network.ProxyCommon;
 
 @Mod(modid = TubeTransportSystem.MOD_ID, version = TubeTransportSystem.MOD_VERSION, name = TubeTransportSystem.MOD_NAME, dependencies = TubeTransportSystem.MOD_DEPENDENCIES)
 public class TubeTransportSystem extends BaseMod {
-    public static final String MOD_NAME = "Tube Transport System", MOD_ID = "tts", MOD_ID_SHORT = "tts", MOD_VERSION = "0.6", MOD_DEPENDENCIES = "required-after:enhancedcore", MOD_URL = "https://raw.githubusercontent.com/enhancedportals/VERSION/master/VERSION%20-%20Tube%20Transport%20System";
+    public static final String MOD_NAME = "Tube Transport System", MOD_ID = "tts", MOD_ID_SHORT = "tts", MOD_VERSION = "0.6.0", MOD_DEPENDENCIES = "required-after:enhancedcore", MOD_URL = "https://raw.githubusercontent.com/enhancedportals/VERSION/master/VERSION%20-%20Tube%20Transport%20System";
 
     @Instance(MOD_ID)
     public static TubeTransportSystem instance;
