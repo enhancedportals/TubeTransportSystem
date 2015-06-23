@@ -2,9 +2,9 @@
 [![Build Status](https://travis-ci.org/enhancedportals/TubeTransportSystem.svg)](https://travis-ci.org/enhancedportals/TubeTransportSystem)
 
 Useful Links:
-* [License](docs/LICENSE)
+* [License](LICENSE)
 * [Downloads](http://www.curse.com/mc-mods/minecraft/231590-tube-transport-system)
-* [Changelog](docs/changelog/)
+* [Changelog](https://github.com/enhancedportals/VERSION/blob/master/CHANGELOG%20-%20Tube%20Transport%20System.md#enhanced-core-changelog)
 * [Minecraft Forums Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2449280-tube-transport-system)
 
 
