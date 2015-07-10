@@ -1,0 +1,11 @@
+tile.tube.name=运输管道
+tile.station.name=管道站台
+itemGroup.tts=管道运输系统
+item.tube.forced=方向: %s
+item.tube.direction.0=下
+item.tube.direction.1=上
+item.tube.direction.2=北
+item.tube.direction.3=南
+item.tube.direction.4=东
+item.tube.direction.5=西
+tts.chat.updateMessage=管道运输系统有新版本更新可用了(%1$s)
